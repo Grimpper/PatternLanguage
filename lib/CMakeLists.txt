@@ -104,4 +104,5 @@ set_target_properties(libpl PROPERTIES PREFIX "")
 
 if (LIBPL_SHARED_LIBRARY)
     install(TARGETS libpl DESTINATION lib)
+    install(DIRECTORY include/ DESTINATION include)
 endif ()

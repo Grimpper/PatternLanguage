@@ -1,0 +1,21 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# List dependencies here using find_dependency() if needed
+# find_dependency(SomeDependency REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/libpl-targets.cmake")
+
+# Set the include directories
+set(LIBPL_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include")
+
+# Set the libraries
+set(LIBPL_LIBRARIES libpl)
+
+# Export the include directory and libraries for downstream usage
+set(libpl_INCLUDE_DIRS ${LIBPL_INCLUDE_DIRS})
+set(libpl_LIBRARIES ${LIBPL_LIBRARIES})
+
+# Include these in the consumer's project
+include_directories(${LIBPL_INCLUDE_DIRS})

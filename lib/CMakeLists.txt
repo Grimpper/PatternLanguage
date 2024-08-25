@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(libpl)
+project(libpl VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -103,6 +103,40 @@ target_link_libraries(libpl PUBLIC wolv::io wolv::utils wolv::hash wolv::contain
 set_target_properties(libpl PROPERTIES PREFIX "")
 
 if (LIBPL_SHARED_LIBRARY)
-    install(TARGETS libpl DESTINATION lib)
+    # Generate version and config files
+    include(CMakePackageConfigHelpers)
+
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/libpl-config-version.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion
+    )
+
+    configure_file(libpl-config.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/libpl-config.cmake"
+        @ONLY
+    )
+
+    # Install the config files
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libpl-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libpl-config-version.cmake"
+        DESTINATION lib/cmake/libpl
+    )
+
+    # Install the library target
+    install(TARGETS libpl
+        EXPORT libpl-targets
+        DESTINATION lib
+    )
+
+    # Export the targets to a script
+    install(EXPORT libpl-targets
+        FILE libpl-targets.cmake
+        NAMESPACE libpl::
+        DESTINATION lib/cmake/libpl
+    )
+
+    # Install the include directory
     install(DIRECTORY include/ DESTINATION include)
 endif ()
